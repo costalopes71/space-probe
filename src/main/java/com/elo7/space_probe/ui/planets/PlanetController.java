@@ -1,9 +1,11 @@
 package com.elo7.space_probe.ui.planets;
 
+import com.elo7.space_probe.app.exceptions.ResourceNotFoundException;
 import com.elo7.space_probe.app.planets.CreatePlanetUseCase;
 import com.elo7.space_probe.app.planets.FindAllPlanetUseCase;
 import com.elo7.space_probe.app.planets.FindPlanetUseCase;
 import com.elo7.space_probe.domain.Planet;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,15 +40,16 @@ class PlanetController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     PlanetDTO findById(@PathVariable("id") Integer id) {
-        Optional<Planet> probe = findPlanetUseCase.execute(id);
-        return probe.map(planetToDtoConverter::convert).orElse(null);
+        Planet planet = findPlanetUseCase.execute(id).orElseThrow(() -> new ResourceNotFoundException("Planet not found."));
+        return planetToDtoConverter.convert(planet);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    PlanetDTO create(@RequestBody PlanetCreateDTO probeCreateDTO) {
+    PlanetDTO create(@RequestBody @Valid PlanetCreateDTO probeCreateDTO) {
         Planet probe = planetCreateDTOToModelConverter.convert(probeCreateDTO);
         Planet createdProbe = createPlanetUseCase.execute(probe);
         return planetToDtoConverter.convert(createdProbe);
     }
+
 }

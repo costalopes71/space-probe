@@ -2,22 +2,24 @@ package com.elo7.space_probe.ui.probes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record ProbeCreateDTO(
         @JsonProperty("name")
-        @NotNull(message = "Probe name can't be null")
+        @NotBlank(message = "Probe name can't be empty")
         String name,
         @JsonProperty("x")
-        @NotNull(message = "Probe x can't be null")
+        @Min(value = 0, message = "Probe x can't be less than 0")
         Integer x,
         @JsonProperty("y")
-        @NotNull(message = "Probe y can't be null")
+        @Min(value = 0, message = "Probe y can't be less than 0")
         Integer y,
         @JsonProperty("planet_id")
         @NotNull(message = "Probe planet_id can't be null")
         Integer planetId,
         @JsonProperty("orientation")
-        @Nullable
+        @NotBlank(message = "Probe orientation can´t be empty")
         String orientation
 ) { }
