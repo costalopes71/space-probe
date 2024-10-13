@@ -4,18 +4,19 @@ import com.elo7.space_probe.domain.Planet;
 import com.elo7.space_probe.domain.Planets;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
-public class FindAllPlanetService {
+public class FindPlanetUseCase {
+
     private final Planets planets;
 
-    FindAllPlanetService(Planets planets) {
+    FindPlanetUseCase(Planets planets) {
         this.planets = planets;
     }
 
-    public List<Planet> execute() {
-        return planets.findAll();
+    public Optional<Planet> execute(Integer id) {
+        return planets.findById(id);
     }
 
 }

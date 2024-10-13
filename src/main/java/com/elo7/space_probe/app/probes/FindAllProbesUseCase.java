@@ -7,10 +7,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class FindAllProbeService {
+public class FindAllProbesUseCase {
+
     private final Probes probes;
 
-    FindAllProbeService(Probes probes) {
+    FindAllProbesUseCase(Probes probes) {
         this.probes = probes;
     }
 

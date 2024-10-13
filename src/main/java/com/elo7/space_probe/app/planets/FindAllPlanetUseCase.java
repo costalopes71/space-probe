@@ -4,16 +4,18 @@ import com.elo7.space_probe.domain.Planet;
 import com.elo7.space_probe.domain.Planets;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class CreatePlanetService {
+public class FindAllPlanetUseCase {
     private final Planets planets;
 
-    CreatePlanetService(Planets planets) {
+    FindAllPlanetUseCase(Planets planets) {
         this.planets = planets;
     }
 
-    public Planet execute(Planet planet) {
-        return planets.save(planet);
+    public List<Planet> execute() {
+        return planets.findAll();
     }
 
 }

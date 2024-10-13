@@ -5,7 +5,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 class ProbeToDtoConverter {
+
     ProbeDTO convert(Probe probe) {
-        return new ProbeDTO(probe.getId(), probe.getName(), probe.getXPosition(), probe.getYPosition(), probe.getPlanetId());
+        return new ProbeDTO(
+                probe.getId(),
+                probe.getName(),
+                probe.getPosition().getX(),
+                probe.getPosition().getY(),
+                probe.getPlanetId(),
+                probe.getPosition().getOrientation().toString()
+        );
     }
+
 }

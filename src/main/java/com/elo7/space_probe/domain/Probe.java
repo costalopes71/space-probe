@@ -1,10 +1,13 @@
 package com.elo7.space_probe.domain;
 
+import com.elo7.space_probe.app.exceptions.PositionOutOfPlanetBoundariesException;
+import com.elo7.space_probe.app.exceptions.ProbeCollisionException;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "probe")
+@Table(name = "probes")
 public class Probe {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -15,16 +18,16 @@ public class Probe {
     @Embedded
     private Position position;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "planet_id", referencedColumnName = "id", nullable = false)
     private Planet planet;
 
     @Deprecated // hibernate only
     public Probe() {}
 
-    public Probe(String name, Integer x, Integer y, Planet planet) {
+    public Probe(String name, Position position, Planet planet) {
         this.name = name;
-        this.position = new Position(x, y);
+        this.position = position;
         this.planet = planet;
     }
 
@@ -36,15 +39,48 @@ public class Probe {
         return name;
     }
 
-    public Integer getXPosition() {
-        return position.getX();
+    public Position getPosition() {
+        return position;
     }
 
-    public Integer getYPosition() {
-        return position.getY();
+    public Orientation getOrientation() {
+        return position.getOrientation();
+    }
+
+    public Planet getPlanet() {
+        return planet;
     }
 
     public Integer getPlanetId() {
         return planet.getId();
     }
+
+    public void turnLeft() {
+        this.position = position.turnLeft();
+    }
+
+    public void turnRight() {
+        this.position = position.turnRight();
+    }
+
+    public void moveForward() {
+        Position newPosition = position.move();
+
+        validatePosition(newPosition);
+
+        this.position = newPosition;
+    }
+
+    private void validatePosition(Position newPosition) {
+
+        if (planet.isPositionOutOfBoundaries(newPosition)) {
+            throw new PositionOutOfPlanetBoundariesException();
+        }
+
+        if (planet.isPositionOccupied(newPosition)) {
+            throw new ProbeCollisionException();
+        }
+
+    }
+
 }

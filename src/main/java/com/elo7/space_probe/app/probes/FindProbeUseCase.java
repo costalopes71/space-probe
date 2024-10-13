@@ -4,16 +4,19 @@ import com.elo7.space_probe.domain.Probe;
 import com.elo7.space_probe.domain.Probes;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public class CreateProbeService {
+public class FindProbeUseCase {
+
     private final Probes probes;
 
-    CreateProbeService(Probes probes) {
+    FindProbeUseCase(Probes probes) {
         this.probes = probes;
     }
 
-    public Probe execute(Probe probe) {
-        return probes.save(probe);
+    public Optional<Probe> execute(Integer id) {
+        return probes.findById(id);
     }
 
 }
